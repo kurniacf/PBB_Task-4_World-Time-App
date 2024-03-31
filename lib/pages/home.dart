@@ -13,7 +13,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     data = data.isNotEmpty ? data : ModalRoute.of(context)?.settings.arguments as Map;
 
-    String bgImage = data['bgImage'];
+    String bgImage = 'day/' + data['bgImage']; 
     Color bgColor = data['isDaytime'] ? Colors.blue : (Colors.indigo[700] ?? Colors.indigo);
 
     // Determine the text color based on the background image
