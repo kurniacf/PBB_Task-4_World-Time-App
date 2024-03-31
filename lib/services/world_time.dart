@@ -8,25 +8,24 @@ class WorldTime {
   String flag;
   String url;
   bool isDaytime = true; 
-  String bgImage = 'morning.jpg'; // Default background image
+  String bgImage = 'morning.jpg'; // Keep your bgImage logic
 
   WorldTime({required this.location, required this.flag, required this.url});
 
   Future<void> getTime() async {
     try {
-      Uri uri = Uri.parse('http://worldtimeapi.org/api/timezone/$url');
-      http.Response response = await http.get(uri);
+      http.Response response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/$url'));
       Map data = jsonDecode(response.body);
-
       String datetime = data['datetime'];
-      String offset = data['utc_offset'].substring(1, 3);
-      String offsetHours = data['utc_offset'].substring(0,1) == '+' ? offset : '-$offset';
+      String offset = data['utc_offset'].substring(0,3); // Following your reference
+      
       DateTime now = DateTime.parse(datetime);
-      now = now.add(Duration(hours: int.parse(offsetHours)));
+      now = now.add(Duration(hours: int.parse(offset)));
 
       isDaytime = now.hour > 6 && now.hour < 20;
-
-      // Determine the background image
+      time = DateFormat.jm().format(now);
+      
+      // Keep the bgImage logic
       if (now.hour >= 5 && now.hour < 8) {
         bgImage = 'sunrise.jpg';
       } else if (now.hour >= 8 && now.hour < 17) {
@@ -36,8 +35,7 @@ class WorldTime {
       } else {
         bgImage = 'night.jpg';
       }
-
-      time = DateFormat.jm().format(now);
+      
     } catch (e) {
       print('Caught error: $e');
       time = 'could not get time data';
